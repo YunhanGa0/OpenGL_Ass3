@@ -21,6 +21,7 @@ import GraphicsObjects.Utils;
 import objects3D.TexSphere;
 import objects3D.Grid;
 import objects3D.Human;
+import objects3D.TexCube;
 
 //Main windows class controls and creates the 3D virtual world , please do not change this class but edit the other classes to complete the assignment. 
 // Main window is built upon the standard Helloworld LWJGL class which I have heavily modified to use as your standard openGL environment. 
@@ -427,6 +428,20 @@ public class MainWindow {
 			glPopMatrix();
 		}
 
+		// 添加标志到场景中
+		glPushMatrix();
+		TexCube sign = new TexCube();
+		glTranslatef(400, 300, 0);  // 调整位置
+		glScalef(100f, 50f, 1f);    // 使立方体变成扁平的标志形状
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		Color.white.bind();
+		signTexture.bind();
+		glEnable(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		sign.drawTexCube(signTexture);
+		glPopMatrix();
 	}
 
 	public static void main(String[] argv) {
@@ -435,6 +450,7 @@ public class MainWindow {
 	}
 
 	Texture texture;
+	Texture signTexture;
 
 	/*
 	 * Any additional textures for your assignment should be written in here. Make a
@@ -443,6 +459,7 @@ public class MainWindow {
 	public void init() throws IOException {
 
 		texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/earthspace.png"));
-		System.out.println("Texture loaded okay ");
+		signTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/img.png"));
+		System.out.println("Textures loaded okay ");
 	}
 }
