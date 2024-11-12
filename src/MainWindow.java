@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
@@ -380,11 +379,22 @@ public class MainWindow {
 		glScalef(90f, 90f, 90f);
 
 		if (!BadAnimation) {
-			// insert your animation code to correct the postion for the human rotating
-
+			// 计算圆周运动
+			float radius = 3.0f;
+			float angle = (float)(delta * 2 * Math.PI);
+			
+			// 计算位置
+			float posX = (float)(radius * Math.cos(angle));
+			float posZ = (float)(radius * Math.sin(angle));
+			
+			// 应用变换
+			glTranslatef(posX, 0.0f, posZ);
+			
+			// 计算朝向角度 - 使人物始终朝向圆心的外侧
+			float rotationAngle = (float)(Math.toDegrees(angle) + 90);
+			glRotatef(rotationAngle, 0.0f, 1.0f, 0.0f);
 		} else {
-
-			// bad animation version
+			// 保持原有的简单移动
 			glTranslatef(posn_x * 3.0f, 0.0f, posn_y * 3.0f);
 		}
 

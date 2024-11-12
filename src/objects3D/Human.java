@@ -40,6 +40,10 @@ public class Human {
 		float LimbRotation;
 		if (GoodAnimation) {
 			LimbRotation = (float) Math.cos(theta) * 45;
+			float TorsoRotation = (float) Math.cos(theta) * 10;
+			glRotatef(TorsoRotation, 0.0f, 0.0f, 1.0f);
+			float HeadRotation = (float) Math.cos(theta) * 5;
+			glRotatef(HeadRotation, 0.0f, 1.0f, 0.0f);
 		} else {
 			LimbRotation = 0;
 		}
