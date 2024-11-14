@@ -92,7 +92,7 @@ public class MainWindow {
 	// support method to aid in converting a java float array into a Floatbuffer
 	// which is faster for the opengl layer to process
 
-	public void start() {
+	public void start() throws IOException {
 
 		StartTime = getTime();
 		try {
@@ -344,7 +344,7 @@ public class MainWindow {
 	 * textures in the INIT method as they take time to load
 	 * 
 	 */
-	public void renderGL() {
+	public void renderGL() throws IOException {
 		changeOrth();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -399,7 +399,7 @@ public class MainWindow {
 			glTranslatef(posn_x * 3.0f, 0.0f, posn_y * 3.0f);
 		}
 
-		MyHuman.drawHuman(delta, !BadAnimation); // give a delta for the Human object ot be animated
+		MyHuman.drawHuman(delta, !BadAnimation, faceTexture, texture); // give a delta for the Human object ot be animated
 
 		glPopMatrix();
 
@@ -444,13 +444,14 @@ public class MainWindow {
 		glPopMatrix();
 	}
 
-	public static void main(String[] argv) {
+	public static void main(String[] argv) throws IOException {
 		MainWindow hello = new MainWindow();
 		hello.start();
 	}
 
 	Texture texture;
 	Texture signTexture;
+	Texture faceTexture;
 
 	/*
 	 * Any additional textures for your assignment should be written in here. Make a
@@ -460,6 +461,7 @@ public class MainWindow {
 
 		texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/earthspace.png"));
 		signTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/sign.png"));
+		faceTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/1.png"));
 		System.out.println("Textures loaded okay ");
 	}
 }

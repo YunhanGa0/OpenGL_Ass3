@@ -6,13 +6,17 @@ import org.newdawn.slick.opengl.Texture;
 import GraphicsObjects.Point4f;
 import GraphicsObjects.Vector4f;
 
+/**
+ * Class for rendering a textured cube using OpenGL
+ * Implements cube texture mapping with proper face normals
+ */
 public class TexCube {
 
-	public TexCube() {
-
-	}
-
-	// Implement using notes and looking at TexSphere
+	/**
+	 * Draws a textured cube with unit dimensions
+	 * Each face of the cube is mapped with the provided texture
+	 * @param myTexture Texture to be applied to all faces of the cube
+	 */
 	public void drawTexCube(Texture myTexture) {
 		Point4f vertices[] = {
 			new Point4f(-1.0f, -1.0f, -1.0f, 0.0f),
@@ -26,19 +30,19 @@ public class TexCube {
 		};
 
 		int faces[][] = {
-			{0, 4, 5, 1}, // 前
-			{0, 2, 6, 4}, // 左
-			{0, 1, 3, 2}, // 底
-			{4, 6, 7, 5}, // 右
-			{1, 5, 7, 3}, // 后
-			{2, 3, 7, 6}  // 顶
+			{0, 4, 5, 1}, // Front
+			{0, 2, 6, 4}, // Left
+			{0, 1, 3, 2}, // Bottom
+			{4, 6, 7, 5}, // Right
+			{1, 5, 7, 3}, // Back
+			{2, 3, 7, 6}  // Top
 		};
 
 		float texCoords[][] = {
-			{0.0f, 0.0f},  // 左下
-			{1.0f, 0.0f},  // 右下
-			{1.0f, 1.0f},  // 右上
-			{0.0f, 1.0f}   // 左上
+			{0.0f, 0.0f},  // Bottom-left
+			{1.0f, 0.0f},  // Bottom-right
+			{1.0f, 1.0f},  // Top-right
+			{0.0f, 1.0f}   // Top-left
 		};
 
 		glEnable(GL_TEXTURE_2D);

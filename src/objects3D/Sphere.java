@@ -2,6 +2,10 @@ package objects3D;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Class for rendering a basic sphere using OpenGL
+ * Creates a sphere using spherical coordinates and quad primitives
+ */
 public class Sphere {
 
 	public Sphere() {
@@ -12,6 +16,14 @@ public class Sphere {
 	// lecture 7 , 7b and 8
 	// 7b should be your primary source, we will cover more about circles in later
 	// lectures to understand why the code works
+
+	/**
+	 * Draws a sphere with specified dimensions
+	 * Uses spherical coordinates to generate vertices
+	 * @param radius Radius of the sphere
+	 * @param nSlices Number of horizontal slices
+	 * @param nSegments Number of vertical segments
+	 */
 	public void drawSphere(float radius, float nSlices, float nSegments) {
 		float x, y, z;
 		float inctheta = (float) ((2.0f * Math.PI) / nSlices);

@@ -4,10 +4,21 @@ import static org.lwjgl.opengl.GL11.*;
 import GraphicsObjects.Point4f;
 import GraphicsObjects.Utils;
 import GraphicsObjects.Vector4f;
+import org.lwjgl.util.glu.GLU;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.ResourceLoader;
 
+import java.io.IOException;
+
+/**
+ * Class representing a humanoid figure that can be animated
+ * Includes walking animations, limb movements and textured body parts
+ */
 public class Human {
 
-	// basic colours
+	// Color definitions for different parts of the human model
+	// Basic colors used for material properties
 	static float black[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	static float white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -34,13 +45,20 @@ public class Human {
 
 	}
 
-	// Implement using notes in Animation lecture
-	public void drawHuman(float delta, boolean GoodAnimation) {
+	/**
+	 * Main method to draw the human figure with animations
+	 * @param delta Time parameter for continuous animation
+	 * @param GoodAnimation Flag to switch between simple and complex animation
+	 * @param faceTexture Texture for the face
+	 * @param texture Texture for the body parts
+	 */
+	public void drawHuman(float delta, boolean GoodAnimation, Texture faceTexture, Texture texture) throws IOException {
+		// Calculate the animation phase
 		float theta = (float) (delta * 2 * Math.PI);
 		float LimbRotation;
 
-		// 声明所有腿部角度变量
-		float leftUpperLegAngle = 90;  // 默认角度
+		// Initialize leg angles
+		float leftUpperLegAngle = 90;  // Default angle
 		float leftLowerLegAngle = 0;
 		float rightUpperLegAngle = 90;
 		float rightLowerLegAngle = 0;
@@ -68,15 +86,27 @@ public class Human {
 
 		{
 			glTranslatef(0.0f, 0.5f, 0.0f);
-			sphere.drawSphere(0.5f, 32, 32);
+			// 第一个躯干球体
+			glColor3f(white[0], white[1], white[2]);
+			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(white));
+			glEnable(GL_TEXTURE_2D);
+			texture.bind();
+			TexSphere bodySphere1 = new TexSphere();
+			bodySphere1.DrawTexSphere(0.5f, 32, 32, texture);
+			glDisable(GL_TEXTURE_2D);
 
 			// chest
-			glColor3f(green[0], green[1], green[2]);
-			glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(green));
 			glPushMatrix();
 			{
 				glTranslatef(0.0f, 0.5f, 0.0f);
-				sphere.drawSphere(0.55f, 32, 32);
+				// 第二个躯干球体
+				glColor3f(white[0], white[1], white[2]);
+				glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(white));
+				glEnable(GL_TEXTURE_2D);
+				texture.bind();
+				TexSphere bodySphere2 = new TexSphere();
+				bodySphere2.DrawTexSphere(0.55f, 32, 32, texture);
+				glDisable(GL_TEXTURE_2D);
 
 				// neck
 				glColor3f(orange[0], orange[1], orange[2]);
@@ -89,12 +119,16 @@ public class Human {
 					cylinder.drawCylinder(0.15f, 0.7f, 32);
 
 					// head
-					glColor3f(red[0], red[1], red[2]);
-					glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(red));
+					glColor3f(white[0], white[1], white[2]);
+					glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, Utils.ConvertForGL(white));
 					glPushMatrix();
 					{
 						glTranslatef(0.0f, 0.0f, 1.0f);
-						sphere.drawSphere(0.5f, 32, 32);
+						glEnable(GL_TEXTURE_2D);
+						faceTexture.bind();
+						TexSphere headSphere = new TexSphere();
+						headSphere.DrawTexSphere(0.5f, 32, 32, faceTexture);
+						glDisable(GL_TEXTURE_2D);
 						glPopMatrix();
 					}
 					glPopMatrix();
@@ -345,32 +379,44 @@ public class Human {
 
 	}
 
+	/**
+	 * Calculate the rotation angles for leg animation
+	 * @param theta Current animation phase
+	 * @param isUpperLeg True for thigh, false for calf
+	 * @return Calculated angle in degrees
+	 */
 	private float calculateLegAngle(float theta, boolean isUpperLeg) {
 		if (isUpperLeg) {
-			// 大腿的摆动范围保持在 45° ~ 135°
+			// Thigh swing range: 45° ~ 135°
 			return (float)(Math.cos(theta) * 45f + 90);
 		} else {
-			// 修改小腿的旋转逻辑
+			// Modified calf rotation logic
 			float kneeAngle = (float)Math.cos(theta);
-			if (kneeAngle > 0) { // 腿在前面时
-				return -kneeAngle * 80; // 保持前摆时的弯曲
-			} else { // 腿在后面时
-				return 0; // 后摆时完全伸直，不再有负角度
+			if (kneeAngle > 0) { // When leg is in front
+				return -kneeAngle * 80; // Maintain bend during forward swing
+			} else { // When leg is behind
+				return 0; // Fully extended during backward swing
 			}
 		}
 	}
 
+	/**
+	 * Calculate the rotation angles for arm animation
+	 * @param theta Current animation phase
+	 * @param isUpperArm True for upper arm, false for forearm
+	 * @return Calculated angle in degrees
+	 */
 	private float calculateArmAngle(float theta, boolean isUpperArm) {
 		if (isUpperArm) {
-			// 大臂的摆动范围是 -45° ~ 45°
+			// Upper arm swing range: -45° ~ 45°
 			return (float)(Math.cos(theta) * 45);
 		} else {
-			// 当大臂抬起时,小臂弯曲更大
+			// Enhanced forearm bending when upper arm is raised
 			float elbowAngle = (float)Math.cos(theta);
-			if (elbowAngle > 0) { // 手臂在前面时
-				return elbowAngle * 60; // 肘部弯曲最大60度
-			} else { // 手臂在后面时
-				return elbowAngle * 20; // 手臂基本伸直,只有轻微弯曲
+			if (elbowAngle > 0) { // When arm is in front
+				return elbowAngle * 60; // Maximum elbow bend 60 degrees
+			} else { // When arm is behind
+				return elbowAngle * 20; // Mostly straight with slight bend
 			}
 		}
 	}

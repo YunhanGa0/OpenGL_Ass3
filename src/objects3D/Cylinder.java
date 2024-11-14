@@ -5,41 +5,45 @@ import GraphicsObjects.Point4f;
 import GraphicsObjects.Vector4f;
 import java.math.*;
 
+/**
+ * Class for rendering a basic cylinder using OpenGL
+ * Creates a cylinder with specified dimensions using quad and triangle primitives
+ */
 public class Cylinder {
 
-	
-	public Cylinder() { 
-	}
-	
-	// remember to use Math.PI isntead PI 
-	// Implement using notes and examine Tetrahedron to aid in the coding  look at lecture  7 , 7b and 8 
+	/**
+	 * Draws a cylinder with specified dimensions
+	 * @param radius Radius of the cylinder base
+	 * @param height Height of the cylinder
+	 * @param nSegments Number of segments around the circumference
+	 */
 	public void drawCylinder(float radius, float height, int nSegments) {
 	    float x, y, z;
 	    float angle;
 	    
-	    // 绘制圆柱体侧面
+	    // Draw the side surface using quads
 	    glBegin(GL_QUADS);
 	    for(float i = 0; i < nSegments; i++) {
 	        angle = (float) (2.0 * Math.PI * i / nSegments);
 	        float nextAngle = (float) (2.0 * Math.PI * (i+1) / nSegments);
 	        
-	        // 第一个顶点
+	        // First vertex
 	        x = (float) (radius * Math.cos(angle));
 	        y = (float) (radius * Math.sin(angle));
 	        glNormal3f(x/radius, y/radius, 0);
 	        glVertex3f(x, y, 0);
 	        
-	        // 第二个顶点
+	        // Second vertex
 	        x = (float) (radius * Math.cos(nextAngle));
 	        y = (float) (radius * Math.sin(nextAngle));
 	        glNormal3f(x/radius, y/radius, 0);
 	        glVertex3f(x, y, 0);
 	        
-	        // 第三个顶点
+	        // Third vertex
 	        glNormal3f(x/radius, y/radius, 0);
 	        glVertex3f(x, y, height);
 	        
-	        // 第四个顶点
+	        // Fourth vertex
 	        x = (float) (radius * Math.cos(angle));
 	        y = (float) (radius * Math.sin(angle));
 	        glNormal3f(x/radius, y/radius, 0);
@@ -47,7 +51,7 @@ public class Cylinder {
 	    }
 	    glEnd();
 	    
-	    // 绘制顶面和底面
+	    // Draw top and bottom faces using triangle fans
 	    for(int i = 0; i < 2; i++) {
 	        glBegin(GL_TRIANGLE_FAN);
 	        z = (i == 0) ? 0 : height;

@@ -8,6 +8,10 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import GraphicsObjects.Utils;
 
+/**
+ * Class for rendering a textured sphere using OpenGL
+ * Implements spherical texture mapping using quadrilateral primitives
+ */
 public class TexSphere {
 	static float red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 	static float green[] = { 0.0f, 1.0f, 0.0f, 1.0f };
