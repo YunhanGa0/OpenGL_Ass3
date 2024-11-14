@@ -459,7 +459,7 @@ public class MainWindow {
 	public void init() throws IOException {
 
 		texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/earthspace.png"));
-		signTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/img.png"));
+		signTexture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/sign.png"));
 		System.out.println("Textures loaded okay ");
 	}
 }
